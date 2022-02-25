@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:muhasebeflutter/HomePage/ProcessPage/ProcessPageForm.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:muhasebeflutter/Colors.dart';
+import 'package:muhasebeflutter/Home/ProcessPage/ProcessPageForm.dart';
+import 'package:muhasebeflutter/Libs/DefaultWidgets.dart';
 
 class ProcessPage extends StatefulWidget {
   const ProcessPage({Key? key}) : super(key: key);
@@ -8,47 +12,60 @@ class ProcessPage extends StatefulWidget {
   _ProcessPageState createState() => _ProcessPageState();
 }
 
-class _ProcessPageState extends State<ProcessPage> {
-  bool? _errorTextStatus = false;
+class _ProcessPageState extends State<ProcessPage>  with SingleTickerProviderStateMixin{
   var accountNameController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  bool _floatClickable = false;
+  double degress = 0;
 
   @override
   Widget build(BuildContext context) {
+    double _screenWidth = MediaQuery.of(context).size.width;
+    ColorScheme themeColors = Theme.of(context).colorScheme;
+    TextEditingController productNameController = TextEditingController();
+
+
     return SafeArea(
         child: Scaffold(
-          backgroundColor: Color(0xffBB6464),
             appBar: AppBar(
-              backgroundColor: Color(0xffCDB699),
-              title: Text("Proccess"),
+              elevation: 0.0,
+              title: Text("İşlem"),
             ),
-            body: Padding(
-              padding: EdgeInsets.only(left: 30 , right:30 , top: 5),
-              child: Column(
+            floatingActionButton: FloatingActionButton(onPressed: () { setState(() {
+              _floatClickable ? _floatClickable = false:_floatClickable = true;
+              _floatClickable ? setState(() => { degress = 150 }) : setState(() => { degress = 0 });
+            }); },
+              child: Container(
+                width: 50,
+                height: 50,
+                alignment: Alignment.center,
+                child: Transform.rotate(angle: degress , child: Icon(Icons.add),)
+              )
+            ),
+          body: Column(
+            children: [
+              Spacer(),
+              Column(
                 children: [
-                  TextField(
-                    maxLength: 10,
-                    controller: accountNameController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        borderSide: BorderSide(color: Color(0xffCDB699))
-                      )
+                  _floatClickable ? Container(
+                    width: _screenWidth,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(40) , topRight: Radius.circular(40)),
+                      color: themeColors.primary,
                     ),
-                    onChanged: (value) =>{
-                      setState(() {
-                        if(value.length >= 1){
-                          _errorTextStatus = true;
-                        }else{
-                          _errorTextStatus = false;
-                        }
-                      })
-                    },
-                  ),
-                  _errorTextStatus! ? Container(child: const ProcessPageForm(),) : Container()
+                    child: Column(
+                      children: [
+                        Text("Merhaba 1"),
+                        Text("Buradan ürün ekleyebilirsiniz"),
+                      ],
+                    ),
+                  ) : Container()
                 ],
-              ),
-            )
-        )
+              )
+            ],
+          ),
+      )
     );
   }
 }

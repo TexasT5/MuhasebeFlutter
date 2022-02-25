@@ -2,24 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:muhasebeflutter/HomePage/AccountHistory/AccountHistory.dart';
-import 'package:muhasebeflutter/Model/User.dart';
+import 'package:muhasebeflutter/Home/AccountHistory/AccountHistory.dart';
+import 'package:muhasebeflutter/Home/UserDialog/UserDialog.dart';
 import 'package:muhasebeflutter/SQLite/Database.dart';
 
 import 'ProcessPage/ProcessPage.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<Home> {
   final database = Databases();
 
+
   @override
-  void initState() {}
+  void initState() {
+    database.open();
+    database.getList();
+
+    database.getList().then((value) => {
+      value.forEach((element) {
+        print(element.name);
+      })
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +78,11 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.red,
                     ),
                     TextButton(
-                      onPressed: () => {},
+                      onPressed: () => {
+                        ShowDilaog(context)
+                      },
                       child: Text("Bilgilerimi Güncelle",
-                          style: TextStyle(fontSize: 13)),
+                          style: TextStyle(fontSize: 13 )),
                       style: TextButton.styleFrom(alignment: Alignment.center),
                     )
                   ],
